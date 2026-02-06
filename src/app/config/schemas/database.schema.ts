@@ -1,0 +1,30 @@
+import z from 'zod';
+
+export const databaseSchema = z.object({
+  DATABASE_TYPE: z.enum([
+    'mysql',
+    'postgres',
+    'cockroachdb',
+    'sap',
+    'mariadb',
+    'sqlite',
+    'cordova',
+    'react-native',
+    'nativescript',
+    'mssql',
+    'mongodb',
+    'aurora-mysql',
+    'aurora-postgres',
+    'expo',
+    'better-sqlite3',
+    'capacitor',
+    'spanner',
+  ]),
+  DATABASE_HOST: z.string(),
+  DATABASE_PORT: z.coerce.number().positive().default(5432),
+  DATABASE_DATABASE: z.string(),
+  DATABASE_USERNAME: z.string(),
+  DATABASE_PASSWORD: z.string(),
+  DATABASE_AUTOLOADENTITIES: z.coerce.boolean().default(false),
+  DATABASE_SYNCHRONIZE: z.coerce.boolean().default(false),
+});
