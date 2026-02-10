@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
+import { AuthModule } from 'src/auth/auth.module';
 import { UsersModule } from 'src/users/users.module';
 import databaseConfig from './config/database.config';
 import { ConfigModule, ConfigType } from '@nestjs/config';
@@ -9,6 +10,7 @@ import { ConfigModule, ConfigType } from '@nestjs/config';
 @Module({
   imports: [
     UsersModule,
+    AuthModule,
     ConfigModule.forRoot({}),
     ConfigModule.forFeature(databaseConfig),
     TypeOrmModule.forRootAsync({
