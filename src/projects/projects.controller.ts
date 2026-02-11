@@ -7,6 +7,9 @@ import { JwtAccessTokenPayloadDto } from 'src/auth/dto/jwt-token-payload.dto';
 import {
   Body,
   Controller,
+  Get,
+  Param,
+  ParseIntPipe,
   Post,
   SerializeOptions,
   UseGuards,
@@ -17,6 +20,19 @@ import {
 @UseGuards(JwtAuthGuard)
 export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
+
+  @Get(':id')
+  getProject(
+    @CurrentAuthToken() currentToken: JwtAccessTokenPayloadDto,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.projectsService.getOne(currentToken, id);
+  }
+
+  @Get()
+  getProjectList(@CurrentAuthToken() currentToken: JwtAccessTokenPayloadDto) {
+    return this.projectsService.getList(currentToken);
+  }
 
   @Post()
   createProject(
