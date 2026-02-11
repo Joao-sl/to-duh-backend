@@ -6,11 +6,13 @@ import { AuthModule } from 'src/auth/auth.module';
 import { UsersModule } from 'src/users/users.module';
 import databaseConfig from './config/database.config';
 import { ConfigModule, ConfigType } from '@nestjs/config';
+import { ProjectsModule } from 'src/projects/projects.module';
 
 @Module({
   imports: [
     UsersModule,
     AuthModule,
+    ProjectsModule,
     ConfigModule.forRoot({}),
     ConfigModule.forFeature(databaseConfig),
     TypeOrmModule.forRootAsync({
