@@ -1,5 +1,5 @@
 import { Repository } from 'typeorm';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Project } from './entities/project.entity';
 import { UsersService } from 'src/users/users.service';
@@ -18,7 +18,7 @@ export class ProjectsService {
     const user = await this.usersService.findOneById(jwtPayload.sub);
 
     const projectPayload = {
-      user_id: user.id,
+      user: user,
       ...data,
     };
 

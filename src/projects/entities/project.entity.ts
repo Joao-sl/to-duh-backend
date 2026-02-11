@@ -6,6 +6,7 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  RelationId,
   UpdateDateColumn,
 } from 'typeorm';
 
@@ -16,6 +17,9 @@ export class Project {
 
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
+  user: User;
+
+  @RelationId((project: Project) => project.user)
   user_id: number;
 
   @Column({ length: 80 })
