@@ -1,15 +1,20 @@
 import { SectionsService } from './sections.service';
 import { CreateSectionDto } from './dto/create-section.dto';
+import { UpdateSectionDto } from './dto/update-section.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { JwtAccessTokenPayloadDto } from 'src/auth/dto/jwt-token-payload.dto';
-import { CurrentAuthToken } from 'src/auth/params/current-auth-token.param';
 import { ResponseProjectDto } from 'src/projects/dto/response-project.dto';
+import { CurrentAuthToken } from 'src/auth/params/current-auth-token.param';
+import { JwtAccessTokenPayloadDto } from 'src/auth/dto/jwt-token-payload.dto';
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   SerializeOptions,
   UseGuards,
@@ -40,5 +45,23 @@ export class SectionsController {
     @Body() data: CreateSectionDto,
   ) {
     return this.sectionsService.create(currentToken, data);
+  }
+
+  @Patch(':id')
+  updateSection(
+    @CurrentAuthToken() currentToken: JwtAccessTokenPayloadDto,
+    @Body() data: UpdateSectionDto,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.sectionsService.update(currentToken, data, id);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  deleteById(
+    @CurrentAuthToken() currentToken: JwtAccessTokenPayloadDto,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.sectionsService.deleteById(currentToken, id);
   }
 }
