@@ -8,6 +8,7 @@ import databaseConfig from './config/database.config';
 import { ConfigModule, ConfigType } from '@nestjs/config';
 import { ProjectsModule } from 'src/projects/projects.module';
 import { SectionsModule } from 'src/sections/sections.module';
+import { TasksModule } from 'src/tasks/tasks.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { SectionsModule } from 'src/sections/sections.module';
     AuthModule,
     ProjectsModule,
     SectionsModule,
+    TasksModule,
     ConfigModule.forRoot({}),
     ConfigModule.forFeature(databaseConfig),
     TypeOrmModule.forRootAsync({
