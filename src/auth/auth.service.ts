@@ -117,11 +117,7 @@ export class AuthService {
   }
 
   async update(tokenPayload: JwtAccessTokenPayloadDto, data: UpdateUserDto) {
-    const bodyIsEmpty = Object.values(data).filter(
-      value => value !== undefined,
-    );
-
-    if (bodyIsEmpty.length === 0) {
+    if (Object.values(data).length === 0) {
       throw new BadRequestException('Request body is empty');
     }
 
