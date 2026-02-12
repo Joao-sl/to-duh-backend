@@ -19,17 +19,23 @@ export class ProjectsService {
     private readonly usersService: UsersService,
   ) {}
 
-  async getOne(jwtPayload: JwtAccessTokenPayloadDto, id: number) {
-    const user = await this.usersService.findOneById(jwtPayload.sub);
+  async findOneByIdAndUserId(id: number, userId: number) {
     const project = await this.projectsRepo.findOne({
       where: {
         id: id,
         is_archived: false,
-        user: { id: user.id },
+        user: { id: userId },
       },
     });
 
     if (!project) throw new NotFoundException('Project not found');
+
+    return project;
+  }
+
+  async getOne(jwtPayload: JwtAccessTokenPayloadDto, id: number) {
+    const user = await this.usersService.findOneById(jwtPayload.sub);
+    const project = await this.findOneByIdAndUserId(id, user.id);
 
     return project;
   }
@@ -68,14 +74,7 @@ export class ProjectsService {
     }
 
     const user = await this.usersService.findOneById(jwtPayload.sub);
-    const project = await this.projectsRepo.findOne({
-      where: {
-        id: id,
-        user: { id: user.id },
-      },
-    });
-
-    if (!project) throw new NotFoundException('Project not found');
+    const project = await this.findOneByIdAndUserId(id, user.id);
 
     const merged = this.projectsRepo.merge(project, data);
     const updatedProject = await this.projectsRepo.save(merged);
