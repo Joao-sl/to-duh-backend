@@ -7,12 +7,14 @@ import { UsersModule } from 'src/users/users.module';
 import databaseConfig from './config/database.config';
 import { ConfigModule, ConfigType } from '@nestjs/config';
 import { ProjectsModule } from 'src/projects/projects.module';
+import { SectionsModule } from 'src/sections/sections.module';
 
 @Module({
   imports: [
     UsersModule,
     AuthModule,
     ProjectsModule,
+    SectionsModule,
     ConfigModule.forRoot({}),
     ConfigModule.forFeature(databaseConfig),
     TypeOrmModule.forRootAsync({
