@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Section } from './entities/section.entity';
 import { UsersService } from 'src/users/users.service';
@@ -15,6 +15,43 @@ export class SectionsService {
     private readonly usersService: UsersService,
     private readonly projectsService: ProjectsService,
   ) {}
+
+  async findOneByIdAndUserId(id: number, userId: number) {
+    const section = await this.sectionsRepo.findOne({
+      where: {
+        id: id,
+        user: { id: userId },
+      },
+    });
+
+    if (!section) throw new NotFoundException('Section not found');
+
+    return section;
+  }
+
+  async findAllByIdAndUserId(userId: number) {
+    const section = await this.sectionsRepo.find({
+      where: {
+        user: { id: userId },
+      },
+    });
+
+    if (!section) throw new NotFoundException('Section not found');
+
+    return section;
+  }
+
+  async getOne(jwtPayload: JwtAccessTokenPayloadDto, id: number) {
+    const user = await this.usersService.findOneById(jwtPayload.sub);
+    const section = await this.findOneByIdAndUserId(id, user.id);
+    return section;
+  }
+
+  async getList(jwtPayload: JwtAccessTokenPayloadDto) {
+    const user = await this.usersService.findOneById(jwtPayload.sub);
+    const section = await this.findAllByIdAndUserId(user.id);
+    return section;
+  }
 
   async create(jwtPayload: JwtAccessTokenPayloadDto, data: CreateSectionDto) {
     const user = await this.usersService.findOneById(jwtPayload.sub);

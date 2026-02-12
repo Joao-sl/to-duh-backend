@@ -7,6 +7,9 @@ import { ResponseProjectDto } from 'src/projects/dto/response-project.dto';
 import {
   Body,
   Controller,
+  Get,
+  Param,
+  ParseIntPipe,
   Post,
   SerializeOptions,
   UseGuards,
@@ -17,6 +20,19 @@ import {
 @SerializeOptions({ type: ResponseProjectDto })
 export class SectionsController {
   constructor(private readonly sectionsService: SectionsService) {}
+
+  @Get(':id')
+  getOne(
+    @CurrentAuthToken() currentToken: JwtAccessTokenPayloadDto,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.sectionsService.getOne(currentToken, id);
+  }
+
+  @Get()
+  getList(@CurrentAuthToken() currentToken: JwtAccessTokenPayloadDto) {
+    return this.sectionsService.getList(currentToken);
+  }
 
   @Post()
   createSection(
