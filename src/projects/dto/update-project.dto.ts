@@ -26,4 +26,8 @@ export class UpdateProjectDto {
   @IsBoolean()
   @IsOptional()
   is_favorite?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  is_archived?: boolean;
 }
