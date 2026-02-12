@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   RelationId,
@@ -19,12 +20,14 @@ export class Section {
   name: string;
 
   @ManyToOne(() => Project, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'project_id' })
   project: Project;
 
   @RelationId((section: Section) => section.project)
   project_id: number;
 
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'user_id' })
   user: User;
 
   @RelationId((section: Section) => section.user)
