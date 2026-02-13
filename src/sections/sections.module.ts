@@ -16,5 +16,6 @@ import { ProjectsModule } from 'src/projects/projects.module';
   ],
   controllers: [SectionsController],
   providers: [SectionsService],
+  exports: [SectionsService],
 })
 export class SectionsModule {}
