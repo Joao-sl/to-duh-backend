@@ -5,7 +5,7 @@ import { AppController } from './app.controller';
 import { AuthModule } from 'src/auth/auth.module';
 import { UsersModule } from 'src/users/users.module';
 import databaseConfig from './config/database.config';
-import { ConfigModule, ConfigType } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { ProjectsModule } from 'src/projects/projects.module';
 import { SectionsModule } from 'src/sections/sections.module';
 import { TasksModule } from 'src/tasks/tasks.module';
@@ -19,20 +19,7 @@ import { TasksModule } from 'src/tasks/tasks.module';
     TasksModule,
     ConfigModule.forRoot({}),
     ConfigModule.forFeature(databaseConfig),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule.forFeature(databaseConfig)],
-      inject: [databaseConfig.KEY],
-      useFactory: (databaseConfigs: ConfigType<typeof databaseConfig>) => ({
-        type: databaseConfigs.type,
-        host: databaseConfigs.host,
-        port: databaseConfigs.port,
-        database: databaseConfigs.database,
-        username: databaseConfigs.username,
-        password: databaseConfigs.password,
-        synchronize: databaseConfigs.synchronize,
-        autoLoadEntities: databaseConfigs.autoLoadEntities,
-      }),
-    }),
+    TypeOrmModule.forRootAsync(databaseConfig.asProvider()),
   ],
   controllers: [AppController],
   providers: [AppService],
