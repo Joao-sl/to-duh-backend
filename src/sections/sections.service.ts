@@ -41,8 +41,6 @@ export class SectionsService {
       },
     });
 
-    if (!section) throw new NotFoundException('Section not found');
-
     return section;
   }
 
