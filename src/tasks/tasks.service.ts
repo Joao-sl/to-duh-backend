@@ -6,7 +6,7 @@ import { UsersService } from 'src/users/users.service';
 import { ProjectsService } from 'src/projects/projects.service';
 import { SectionsService } from 'src/sections/sections.service';
 import { JwtAccessTokenPayloadDto } from 'src/auth/dto/jwt-token-payload.dto';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class TasksService {
@@ -17,6 +17,38 @@ export class TasksService {
     private readonly projectsService: ProjectsService,
     private readonly sectionsService: SectionsService,
   ) {}
+
+  async findOneByOwner(id: number, userId: number) {
+    const task = await this.TasksRepo.findOne({
+      where: {
+        id: id,
+        user: { id: userId },
+      },
+    });
+
+    if (!task) throw new NotFoundException('Task not found');
+    return task;
+  }
+
+  async findAllByOwner(userId: number) {
+    const tasks = await this.TasksRepo.find({
+      where: { user: { id: userId } },
+    });
+
+    return tasks;
+  }
+
+  async getOne(jwtPayload: JwtAccessTokenPayloadDto, id: number) {
+    const user = await this.usersService.findOneById(jwtPayload.sub);
+    const task = await this.findOneByOwner(id, user.id);
+    return task;
+  }
+
+  async getList(jwtPayload: JwtAccessTokenPayloadDto) {
+    const user = await this.usersService.findOneById(jwtPayload.sub);
+    const tasks = await this.findAllByOwner(user.id);
+    return tasks;
+  }
 
   async create(jwtPayload: JwtAccessTokenPayloadDto, data: CreateTaskDto) {
     const user = await this.usersService.findOneById(jwtPayload.sub);

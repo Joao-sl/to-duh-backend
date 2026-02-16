@@ -7,6 +7,9 @@ import { JwtAccessTokenPayloadDto } from 'src/auth/dto/jwt-token-payload.dto';
 import {
   Body,
   Controller,
+  Get,
+  Param,
+  ParseIntPipe,
   Post,
   SerializeOptions,
   UseGuards,
@@ -17,6 +20,19 @@ import {
 @SerializeOptions({ type: ResponseTaskDto })
 export class TasksController {
   constructor(private readonly taskService: TasksService) {}
+
+  @Get(':id')
+  getOne(
+    @CurrentAuthToken() currentToken: JwtAccessTokenPayloadDto,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.taskService.getOne(currentToken, id);
+  }
+
+  @Get()
+  getList(@CurrentAuthToken() currentToken: JwtAccessTokenPayloadDto) {
+    return this.taskService.getList(currentToken);
+  }
 
   @Post()
   createTask(
