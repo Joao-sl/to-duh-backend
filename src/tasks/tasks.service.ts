@@ -2,24 +2,42 @@ import { Repository } from 'typeorm';
 import { Task } from './entities/task.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateTaskDto } from './dto/create-task.dto';
+import { UpdateTaskDto } from './dto/update-task.dto';
 import { UsersService } from 'src/users/users.service';
 import { ProjectsService } from 'src/projects/projects.service';
 import { SectionsService } from 'src/sections/sections.service';
 import { JwtAccessTokenPayloadDto } from 'src/auth/dto/jwt-token-payload.dto';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 
 @Injectable()
 export class TasksService {
   constructor(
     @InjectRepository(Task)
-    private readonly TasksRepo: Repository<Task>,
+    private readonly tasksRepo: Repository<Task>,
     private readonly usersService: UsersService,
     private readonly projectsService: ProjectsService,
     private readonly sectionsService: SectionsService,
   ) {}
 
+  private handleCompletedAtUpdate(
+    dbValue: boolean,
+    newValue: boolean | undefined,
+  ) {
+    if (dbValue === newValue || newValue === undefined) {
+      return undefined;
+    }
+    if (newValue === true) {
+      return new Date().toISOString();
+    }
+    return null;
+  }
+
   async findOneByOwner(id: number, userId: number) {
-    const task = await this.TasksRepo.findOne({
+    const task = await this.tasksRepo.findOne({
       where: {
         id: id,
         user: { id: userId },
@@ -31,7 +49,7 @@ export class TasksService {
   }
 
   async findAllByOwner(userId: number) {
-    const tasks = await this.TasksRepo.find({
+    const tasks = await this.tasksRepo.find({
       where: { user: { id: userId } },
     });
 
@@ -73,7 +91,44 @@ export class TasksService {
       priority: data.priority,
     };
 
-    const task = await this.TasksRepo.save(taskPayload);
+    const task = await this.tasksRepo.save(taskPayload);
     return task;
+  }
+
+  async update(
+    jwtPayload: JwtAccessTokenPayloadDto,
+    data: UpdateTaskDto,
+    id: number,
+  ) {
+    if (Object.values(data).length === 0) {
+      throw new BadRequestException('Request body is empty');
+    }
+
+    const user = await this.usersService.findOneById(jwtPayload.sub);
+    const task = await this.findOneByOwner(id, user.id);
+    const completedAt = this.handleCompletedAtUpdate(
+      task.is_completed,
+      data.is_completed,
+    );
+    const payload = {
+      ...data,
+      completed_at: completedAt,
+    };
+
+    const mergedData = this.tasksRepo.merge(task, payload);
+    const updatedData = this.tasksRepo.save(mergedData);
+    return updatedData;
+  }
+
+  async deleteTask(jwtPayload: JwtAccessTokenPayloadDto, id: number) {
+    const user = await this.usersService.findOneById(jwtPayload.sub);
+    const deleteResult = await this.tasksRepo.delete({
+      id: id,
+      user: { id: user.id },
+    });
+
+    if (deleteResult.affected === 0) {
+      throw new NotFoundException('Task not found');
+    }
   }
 }
