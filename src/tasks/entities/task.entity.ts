@@ -30,7 +30,7 @@ export class Task {
   @RelationId((task: Task) => task.user)
   user_id: number;
 
-  @ManyToOne(() => Project)
+  @ManyToOne(() => Project, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'project_id' })
   project: Project;
 
