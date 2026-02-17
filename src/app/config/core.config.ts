@@ -7,5 +7,6 @@ export default registerAs('core', () => {
   return {
     node_env: env.NODE_ENV,
     port: env.PORT,
+    allowed_origins: env.ALLOWED_ORIGINS,
   };
 });
