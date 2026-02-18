@@ -1,98 +1,122 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+<div align="center">
+  <h1 align="center" >TO DUH - BACKEND</h3>
+</div>
+<p align="center" style="font-style: italic">To Duh is a task management backend built with <a href="https://nestjs.com/" target="_blank" rel="noopener noreferrer">NestJS</a> and
+<a href="https://typeorm.io/" target="_blank" rel="noopener noreferrer">TypeORM</a> using PostgreSQL. It provides a robust API for user authentication, project, section, and task management.</p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+---
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Features
 
-## Description
+- **User Management:** Register, login (JWT), update, and delete users.
+- **Authentication:** JWT-based authentication, refresh tokens, and protected
+  routes.
+- **Projects:** CRUD operations for projects, with support for favorites and
+  archiving.
+- **Sections:** Organize projects into sections, with full CRUD support.
+- **Tasks:** Manage tasks within sections/projects, including priorities,
+  completion, and due dates.
+- **Rate Limiting & Security:** Throttling and security headers (Helmet) in
+  production.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+---
 
-## Project setup
+## Getting Started
 
-```bash
-$ npm install
-```
+### Prerequisites
 
-## Compile and run the project
+- Node.js (v18+ recommended)
+- PostgreSQL database (recommended)
 
-```bash
-# development
-$ npm run start
+### Installation
 
-# watch mode
-$ npm run start:dev
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/Joao-sl/to-duh-backend.git
+   cd to-duh-backend
+   ```
+2. **Install dependencies:**
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
+3. **Configure environment:**
+   ```bash
+   # Copy `.env-example` to `.env` and fill the variables.
+   ```
+4. **Run the development server:**
+   ```bash
+   npm run start:dev
+   ```
+   The API will be available at `http://localhost:3000` (or the port you set in
+   `.env`).
 
-# production mode
-$ npm run start:prod
-```
+---
 
-## Run tests
+## Scripts
 
-```bash
-# unit tests
-$ npm run test
+- `npm run start` — Start server
+- `npm run start:dev` — Start server in watch mode
+- `npm run start:prod` — Start production server
+- `npm run lint` — Lint code
 
-# e2e tests
-$ npm run test:e2e
+---
 
-# test coverage
-$ npm run test:cov
-```
+## API Overview
 
-## Deployment
+### Auth & User
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+- `POST /users/register` — Register a new user
+- `POST /users/login` — Login and receive JWT
+- `POST /users/refresh` — Refresh JWT token
+- `GET /users/me` — Get current user info (auth required)
+- `PATCH /users/update` — Update user info (auth required)
+- `DELETE /users/delete` — Delete user (auth required)
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### Projects
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+- `GET /projects` — List all projects (auth required)
+- `GET /projects/:id` — Get project by ID (auth required)
+- `POST /projects` — Create a new project (auth required)
+- `PATCH /projects/:id` — Update a project (auth required)
+- `DELETE /projects/:id` — Delete a project (auth required)
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### Sections
 
-## Resources
+- `GET /sections` — List all sections (auth required)
+- `GET /sections/:id` — Get section by ID (auth required)
+- `POST /sections` — Create a new section (auth required)
+- `PATCH /sections/:id` — Update a section (auth required)
+- `DELETE /sections/:id` — Delete a section (auth required)
 
-Check out a few resources that may come in handy when working with NestJS:
+### Tasks
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+- `GET /tasks` — List all tasks (auth required)
+- `GET /tasks/:id` — Get task by ID (auth required)
+- `POST /tasks` — Create a new task (auth required)
+- `PATCH /tasks/:id` — Update a task (auth required)
+- `DELETE /tasks/:id` — Delete a task (auth required)
 
-## Support
+---
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## Tech Stack
 
-## Stay in touch
+[![Static Badge](https://img.shields.io/badge/NestJS-%5E11.0.0-000?style=for-the-badge&logo=nestjs&logoColor=E0234E&labelColor=1d293d&color=E0234E)](https://nestjs.com/)
+&nbsp;&nbsp;&nbsp;
+[![Static Badge](https://img.shields.io/badge/TypeORM-%5E11.0.0-000?style=for-the-badge&logo=typeorm&logoColor=FE0803&labelColor=1d293d&color=FE0803)](https://typeorm.io/)
+&nbsp;&nbsp;&nbsp;
+[![Static Badge](https://img.shields.io/badge/JWT-%5E11.0.0-000?style=for-the-badge&logo=json-web-tokens&logoColor=white&labelColor=1d293d&color=cccccc)](https://jwt.io/)
+&nbsp;&nbsp;&nbsp;
+[![TypeScript](https://img.shields.io/badge/TypeScript-%5E5-000?style=for-the-badge&logo=typescript&logoColor=3178C6&labelColor=1d293d&&color=3178C6)](https://www.typescriptlang.org/)
+&nbsp;&nbsp;&nbsp;
+[![Static Badge](https://img.shields.io/badge/Postgres-%5E18.0.0-000?style=for-the-badge&logo=postgresql&logoColor=4169E1&labelColor=1d293d&color=4169E1)](https://www.postgresql.org/)
+&nbsp;&nbsp;&nbsp;
+[![Static Badge](https://img.shields.io/badge/Zod-%5E4.3.0-000?style=for-the-badge&logo=zod&logoColor=3E67B1&labelColor=1d293d&color=3E67B1)](https://zod.dev/)
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+---
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+To Duh is
+[MIT licensed](https://github.com/Joao-sl/to-duh-backend/blob/main/LICENSE).
