@@ -78,7 +78,10 @@ export class UsersService {
       const dbError = error as DatabaseError;
 
       if (dbError.code === '23505') {
-        throw new ConflictException('Email already in use');
+        throw new ConflictException({
+          message: 'Email already in use',
+          errors: { email: ['Email already in use'] },
+        });
       }
 
       throw new InternalServerErrorException();

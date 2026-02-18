@@ -1,7 +1,14 @@
-import { AppModule } from './app/app.module';
-import { NestFactory, Reflector } from '@nestjs/core';
-import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import helmet from 'helmet';
+import { AppModule } from './app/app.module';
+import { ValidationError } from 'class-validator';
+import { NestFactory, Reflector } from '@nestjs/core';
+import { formatPipeErrors } from './common/helpers/format-pipe-errors.helper';
+import {
+  BadRequestException,
+  ClassSerializerInterceptor,
+  HttpStatus,
+  ValidationPipe,
+} from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -10,6 +17,15 @@ async function bootstrap() {
       whitelist: true,
       forbidNonWhitelisted: true,
       transformOptions: { exposeUnsetFields: false },
+      exceptionFactory: (validationErrors: ValidationError[] = []) => {
+        const formattedErrors = formatPipeErrors(validationErrors);
+
+        return new BadRequestException({
+          statusCode: HttpStatus.BAD_REQUEST,
+          message: 'Invalid data',
+          errors: formattedErrors,
+        });
+      },
     }),
   );
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
