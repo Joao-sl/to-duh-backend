@@ -131,7 +131,11 @@ export class AuthService {
       );
 
       if (!isPasswordCorrect) {
-        throw new UnauthorizedException('Incorrect password');
+        throw new BadRequestException({
+          errors: {
+            password: ['Incorrect password'],
+          },
+        });
       }
 
       const newPasswordHash = await this.hashService.generateHash(
