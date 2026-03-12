@@ -47,6 +47,9 @@ export class ProjectsService {
         is_archived: false,
         user: { id: user.id },
       },
+      order: {
+        created_at: 'DESC',
+      },
     });
 
     return projects;
