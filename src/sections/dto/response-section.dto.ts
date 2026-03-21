@@ -1,7 +1,7 @@
 import { Exclude, Expose } from 'class-transformer';
 
 @Exclude()
-export class Section {
+export class ResponseSectionDto {
   @Expose()
   id: number;
 
