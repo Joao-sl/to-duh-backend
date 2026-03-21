@@ -2,7 +2,7 @@ import { SectionsService } from './sections.service';
 import { CreateSectionDto } from './dto/create-section.dto';
 import { UpdateSectionDto } from './dto/update-section.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { ResponseProjectDto } from 'src/projects/dto/response-project.dto';
+import { ResponseSectionDto } from './dto/response-section.dto';
 import { CurrentAuthToken } from 'src/auth/params/current-auth-token.param';
 import { JwtAccessTokenPayloadDto } from 'src/auth/dto/jwt-token-payload.dto';
 import {
@@ -22,7 +22,7 @@ import {
 
 @Controller('sections')
 @UseGuards(JwtAuthGuard)
-@SerializeOptions({ type: ResponseProjectDto })
+@SerializeOptions({ type: ResponseSectionDto })
 export class SectionsController {
   constructor(private readonly sectionsService: SectionsService) {}
 
