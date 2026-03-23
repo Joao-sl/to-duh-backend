@@ -16,9 +16,11 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   SerializeOptions,
   UseGuards,
 } from '@nestjs/common';
+import { TaskQueryDto } from './dto/query-params.dto';
 
 @Controller('tasks')
 @UseGuards(JwtAuthGuard)
@@ -35,8 +37,11 @@ export class TasksController {
   }
 
   @Get()
-  getList(@CurrentAuthToken() currentToken: JwtAccessTokenPayloadDto) {
-    return this.taskService.getList(currentToken);
+  getList(
+    @CurrentAuthToken() currentToken: JwtAccessTokenPayloadDto,
+    @Query() queryParams: TaskQueryDto,
+  ) {
+    return this.taskService.getList(currentToken, queryParams);
   }
 
   @Post()
