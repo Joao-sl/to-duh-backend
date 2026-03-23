@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { Task } from './entities/task.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -12,6 +12,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { TaskQueryDto } from './dto/query-params.dto';
 
 @Injectable()
 export class TasksService {
@@ -48,9 +49,17 @@ export class TasksService {
     return task;
   }
 
-  async findAllByOwner(userId: number) {
+  async findAllByOwner(userId: number, queryParams?: TaskQueryDto) {
+    const where: FindOptionsWhere<Task> = {
+      user: { id: userId },
+    };
+
+    if (queryParams?.project_id) {
+      where.project = { id: queryParams.project_id };
+    }
+
     const tasks = await this.tasksRepo.find({
-      where: { user: { id: userId } },
+      where,
     });
 
     return tasks;
@@ -62,9 +71,12 @@ export class TasksService {
     return task;
   }
 
-  async getList(jwtPayload: JwtAccessTokenPayloadDto) {
+  async getList(
+    jwtPayload: JwtAccessTokenPayloadDto,
+    queryParams: TaskQueryDto,
+  ) {
     const user = await this.usersService.findOneById(jwtPayload.sub);
-    const tasks = await this.findAllByOwner(user.id);
+    const tasks = await this.findAllByOwner(user.id, queryParams);
     return tasks;
   }
 
