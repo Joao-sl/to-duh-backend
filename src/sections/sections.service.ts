@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { Section } from './entities/section.entity';
 import { UsersService } from 'src/users/users.service';
 import { JwtAccessTokenPayloadDto } from 'src/auth/dto/jwt-token-payload.dto';
@@ -11,6 +11,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { SectionQueryDto } from './dto/query-params.dto';
 
 @Injectable()
 export class SectionsService {
@@ -34,11 +35,17 @@ export class SectionsService {
     return section;
   }
 
-  async findAllByIdAndUserId(userId: number) {
+  async findAllByOwner(userId: number, queryParams?: SectionQueryDto) {
+    const where: FindOptionsWhere<Section> = {
+      user: { id: userId },
+    };
+
+    if (queryParams?.project_id) {
+      where.project = { id: queryParams.project_id };
+    }
+
     const section = await this.sectionsRepo.find({
-      where: {
-        user: { id: userId },
-      },
+      where,
     });
 
     return section;
@@ -50,9 +57,12 @@ export class SectionsService {
     return section;
   }
 
-  async getList(jwtPayload: JwtAccessTokenPayloadDto) {
+  async getList(
+    jwtPayload: JwtAccessTokenPayloadDto,
+    queryParams: SectionQueryDto,
+  ) {
     const user = await this.usersService.findOneById(jwtPayload.sub);
-    const section = await this.findAllByIdAndUserId(user.id);
+    const section = await this.findAllByOwner(user.id, queryParams);
     return section;
   }
 
