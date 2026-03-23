@@ -16,9 +16,11 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   SerializeOptions,
   UseGuards,
 } from '@nestjs/common';
+import { SectionQueryDto } from './dto/query-params.dto';
 
 @Controller('sections')
 @UseGuards(JwtAuthGuard)
@@ -35,8 +37,11 @@ export class SectionsController {
   }
 
   @Get()
-  getList(@CurrentAuthToken() currentToken: JwtAccessTokenPayloadDto) {
-    return this.sectionsService.getList(currentToken);
+  getList(
+    @CurrentAuthToken() currentToken: JwtAccessTokenPayloadDto,
+    @Query() queryParams: SectionQueryDto,
+  ) {
+    return this.sectionsService.getList(currentToken, queryParams);
   }
 
   @Post()
