@@ -1,4 +1,5 @@
 import { Project } from 'src/projects/entities/project.entity';
+import { Task } from 'src/tasks/entities/task.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
   Column,
@@ -6,6 +7,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   RelationId,
   UpdateDateColumn,
@@ -25,6 +27,9 @@ export class Section {
 
   @RelationId((section: Section) => section.project)
   project_id: number;
+
+  @OneToMany(() => Task, task => task.section)
+  tasks: Task[];
 
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })

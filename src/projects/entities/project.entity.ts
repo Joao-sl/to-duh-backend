@@ -1,3 +1,4 @@
+import { Section } from 'src/sections/entities/section.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
   Column,
@@ -5,6 +6,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   RelationId,
   UpdateDateColumn,
@@ -21,6 +23,9 @@ export class Project {
 
   @RelationId((project: Project) => project.user)
   user_id: number;
+
+  @OneToMany(() => Section, section => section.project)
+  sections: Section[];
 
   @Column({ length: 80 })
   name: string;
