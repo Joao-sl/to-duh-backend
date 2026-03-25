@@ -13,9 +13,11 @@ import coreConfig from './config/core.config';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import throttlerConfig from './config/throttler.config';
 import { APP_GUARD } from '@nestjs/core';
+import { ProjectDetailsModule } from 'src/project-details/project-details.module';
 
 @Module({
   imports: [
+    ProjectDetailsModule,
     UsersModule,
     AuthModule,
     ProjectsModule,
