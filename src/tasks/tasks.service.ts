@@ -1,4 +1,4 @@
-import { FindOptionsWhere, Repository } from 'typeorm';
+import { FindOptionsWhere, IsNull, Repository } from 'typeorm';
 import { Task } from './entities/task.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -56,6 +56,13 @@ export class TasksService {
 
     if (queryParams?.project_id) {
       where.project = { id: queryParams.project_id };
+    }
+
+    if (queryParams?.section_id || queryParams?.section_id === null) {
+      where.section =
+        queryParams?.section_id === null
+          ? IsNull()
+          : { id: queryParams?.section_id };
     }
 
     const tasks = await this.tasksRepo.find({
