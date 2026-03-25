@@ -35,7 +35,11 @@ export class SectionsService {
     return section;
   }
 
-  async findAllByOwner(userId: number, queryParams?: SectionQueryDto) {
+  async findAllByOwner(
+    userId: number,
+    queryParams?: SectionQueryDto,
+    relations: string[] = [],
+  ) {
     const where: FindOptionsWhere<Section> = {
       user: { id: userId },
     };
@@ -46,6 +50,10 @@ export class SectionsService {
 
     const section = await this.sectionsRepo.find({
       where,
+      order: {
+        id: 'ASC',
+      },
+      relations: relations,
     });
 
     return section;
