@@ -13,6 +13,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { TaskQueryDto } from './dto/query-params.dto';
+import { Section } from 'src/sections/entities/section.entity';
 
 @Injectable()
 export class TasksService {
@@ -89,16 +90,25 @@ export class TasksService {
 
   async create(jwtPayload: JwtAccessTokenPayloadDto, data: CreateTaskDto) {
     const user = await this.usersService.findOneById(jwtPayload.sub);
+    let section: Section | undefined = undefined;
+
+    if (data.section_id) {
+      section = await this.sectionsService.findOneByIdAndUserId(
+        data.section_id,
+        user.id,
+      );
+    }
+
+    if (section && section.project_id != data.project_id) {
+      throw new BadRequestException(
+        'Section does not belong to the specified project',
+      );
+    }
+
     const project = await this.projectsService.findOneByIdAndUserId(
       data.project_id,
       user.id,
     );
-    const section = data.section_id
-      ? await this.sectionsService.findOneByIdAndUserId(
-          data.section_id,
-          user.id,
-        )
-      : undefined;
 
     const taskPayload = {
       user: user,
