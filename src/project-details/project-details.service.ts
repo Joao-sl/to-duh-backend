@@ -20,10 +20,14 @@ export class ProjectDetailsService {
       this.sectionsService.findAllByOwner(user.id, { project_id: projectId }, [
         'tasks',
       ]),
-      this.tasksService.findAllByOwner(user.id, {
-        project_id: projectId,
-        section_id: null,
-      }),
+      this.tasksService.findAllByOwner(
+        user.id,
+        {
+          project_id: projectId,
+          section_id: null,
+        },
+        { id: 'ASC' },
+      ),
     ]);
 
     return {
