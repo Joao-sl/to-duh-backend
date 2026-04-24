@@ -1,4 +1,9 @@
-import { FindOptionsWhere, IsNull, Repository } from 'typeorm';
+import {
+  FindOptionsOrder,
+  FindOptionsWhere,
+  IsNull,
+  Repository,
+} from 'typeorm';
 import { Task } from './entities/task.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -50,7 +55,11 @@ export class TasksService {
     return task;
   }
 
-  async findAllByOwner(userId: number, queryParams?: TaskQueryDto) {
+  async findAllByOwner(
+    userId: number,
+    queryParams?: TaskQueryDto,
+    orderParam?: FindOptionsOrder<Task>,
+  ) {
     const where: FindOptionsWhere<Task> = {
       user: { id: userId },
     };
@@ -68,6 +77,7 @@ export class TasksService {
 
     const tasks = await this.tasksRepo.find({
       where,
+      order: orderParam,
     });
 
     return tasks;
