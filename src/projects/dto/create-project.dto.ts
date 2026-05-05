@@ -7,6 +7,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class CreateProjectDto {
   @Trim()
@@ -22,6 +23,13 @@ export class CreateProjectDto {
   @MaxLength(255)
   description?: string;
 
+  @Transform(({ value }) => {
+    if (value === null || value === undefined) {
+      return false;
+    }
+
+    return value === 'true' || value === true;
+  })
   @IsBoolean()
   @IsOptional()
   is_favorite?: boolean;
