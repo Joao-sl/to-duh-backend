@@ -5,8 +5,10 @@ import {
   IsString,
   MaxLength,
 } from 'class-validator';
+import { Trim } from 'src/common/decorators/trim.decorator';
 
 export class CreateSectionDto {
+  @Trim()
   @IsString()
   @IsNotEmpty()
   @MaxLength(255)
