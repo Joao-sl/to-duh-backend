@@ -1,4 +1,4 @@
-import { FindOptionsWhere, Repository } from 'typeorm';
+import { FindOptionsOrder, FindOptionsWhere, Repository } from 'typeorm';
 import { Section } from './entities/section.entity';
 import { UsersService } from 'src/users/users.service';
 import { JwtAccessTokenPayloadDto } from 'src/auth/dto/jwt-token-payload.dto';
@@ -48,11 +48,19 @@ export class SectionsService {
       where.project = { id: queryParams.project_id };
     }
 
+    const order: FindOptionsOrder<Section> = {
+      id: 'ASC',
+    };
+
+    if (relations.includes('tasks')) {
+      order.tasks = {
+        id: 'ASC',
+      };
+    }
+
     const section = await this.sectionsRepo.find({
       where,
-      order: {
-        id: 'ASC',
-      },
+      order,
       relations: relations,
     });
 
