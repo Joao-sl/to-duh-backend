@@ -42,6 +42,7 @@ export class SectionsService {
   ) {
     const where: FindOptionsWhere<Section> = {
       user: { id: userId },
+      is_archived: false,
     };
 
     if (queryParams?.project_id) {
