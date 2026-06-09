@@ -9,6 +9,9 @@ export class ResponseSectionDto {
   name: string;
 
   @Expose()
+  is_archived: boolean;
+
+  @Expose()
   project_id: number;
 
   @Expose()

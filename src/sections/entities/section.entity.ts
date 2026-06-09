@@ -21,6 +21,9 @@ export class Section {
   @Column({ length: 255 })
   name: string;
 
+  @Column({ default: false })
+  is_archived: boolean;
+
   @ManyToOne(() => Project, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'project_id' })
   project: Project;
