@@ -8,14 +8,17 @@ import { JwtAccessTokenPayloadDto } from 'src/auth/dto/jwt-token-payload.dto';
 import {
   Body,
   Controller,
+  DefaultValuePipe,
   Delete,
   Get,
   HttpCode,
   HttpStatus,
   Param,
+  ParseBoolPipe,
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   SerializeOptions,
   UseGuards,
 } from '@nestjs/common';
@@ -35,8 +38,12 @@ export class ProjectsController {
   }
 
   @Get()
-  getProjectList(@CurrentAuthToken() currentToken: JwtAccessTokenPayloadDto) {
-    return this.projectsService.getList(currentToken);
+  getProjectList(
+    @CurrentAuthToken() currentToken: JwtAccessTokenPayloadDto,
+    @Query('archived', new DefaultValuePipe(false), ParseBoolPipe)
+    archived: boolean,
+  ) {
+    return this.projectsService.getList(currentToken, archived);
   }
 
   @Post()

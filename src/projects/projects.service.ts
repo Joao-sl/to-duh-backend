@@ -40,11 +40,14 @@ export class ProjectsService {
     return project;
   }
 
-  async getList(jwtPayload: JwtAccessTokenPayloadDto) {
+  async getList(
+    jwtPayload: JwtAccessTokenPayloadDto,
+    archived: boolean = false,
+  ) {
     const user = await this.usersService.findOneById(jwtPayload.sub);
     const projects = await this.projectsRepo.find({
       where: {
-        is_archived: false,
+        is_archived: archived,
         user: { id: user.id },
       },
       order: {
