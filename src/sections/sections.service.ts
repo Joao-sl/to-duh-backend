@@ -42,11 +42,14 @@ export class SectionsService {
   ) {
     const where: FindOptionsWhere<Section> = {
       user: { id: userId },
-      is_archived: false,
     };
 
     if (queryParams?.project_id) {
       where.project = { id: queryParams.project_id };
+    }
+
+    if (typeof queryParams?.archived === 'boolean') {
+      where.is_archived = queryParams?.archived;
     }
 
     const order: FindOptionsOrder<Section> = {
