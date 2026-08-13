@@ -1,4 +1,5 @@
 import { ProjectsService } from './projects.service';
+import { ProjectQueryDto } from './dto/query-params';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -8,13 +9,11 @@ import { JwtAccessTokenPayloadDto } from 'src/auth/dto/jwt-token-payload.dto';
 import {
   Body,
   Controller,
-  DefaultValuePipe,
   Delete,
   Get,
   HttpCode,
   HttpStatus,
   Param,
-  ParseBoolPipe,
   ParseIntPipe,
   Patch,
   Post,
@@ -40,10 +39,9 @@ export class ProjectsController {
   @Get()
   getProjectList(
     @CurrentAuthToken() currentToken: JwtAccessTokenPayloadDto,
-    @Query('archived', new DefaultValuePipe(false), ParseBoolPipe)
-    archived: boolean,
+    @Query() queryParams: ProjectQueryDto,
   ) {
-    return this.projectsService.getList(currentToken, archived);
+    return this.projectsService.getList(currentToken, queryParams);
   }
 
   @Post()

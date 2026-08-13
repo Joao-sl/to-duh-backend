@@ -1,6 +1,7 @@
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Project } from './entities/project.entity';
+import { ProjectQueryDto } from './dto/query-params';
 import { UsersService } from 'src/users/users.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
@@ -42,12 +43,12 @@ export class ProjectsService {
 
   async getList(
     jwtPayload: JwtAccessTokenPayloadDto,
-    archived: boolean = false,
+    queryParams: ProjectQueryDto,
   ) {
     const user = await this.usersService.findOneById(jwtPayload.sub);
     const projects = await this.projectsRepo.find({
       where: {
-        is_archived: archived,
+        is_archived: queryParams.archived,
         user: { id: user.id },
       },
       order: {
