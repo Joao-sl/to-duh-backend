@@ -17,9 +17,11 @@ export class ProjectDetailsService {
     const user = await this.usersService.findOneById(jwtPayload.sub);
     const [project, sections, tasksWithoutSection] = await Promise.all([
       this.projectsService.findOneByIdAndUserId(projectId, user.id),
-      this.sectionsService.findAllByOwner(user.id, { project_id: projectId }, [
-        'tasks',
-      ]),
+      this.sectionsService.findAllByOwner(
+        user.id,
+        { project_id: projectId, archived: false },
+        ['tasks'],
+      ),
       this.tasksService.findAllByOwner(
         user.id,
         {
