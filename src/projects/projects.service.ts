@@ -24,7 +24,6 @@ export class ProjectsService {
     const project = await this.projectsRepo.findOne({
       where: {
         id: id,
-        is_archived: false,
         user: { id: userId },
       },
     });
